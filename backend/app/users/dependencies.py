@@ -6,8 +6,8 @@ from fastapi import status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.users.model import User
-from app.utils.jwt_handler import decode_access_token
+from app.users.models import user_model
+from app.utils.jwt_handle import decode_access_token
 
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/api/v1/users/login"
@@ -26,8 +26,8 @@ def get_current_user(
             detail="Invalid or expired token"
         )
 
-    user = db.query(User).filter(
-        User.id == payload.get("user_id")
+    user = db.query(user_model).filter(
+        user_model.id == payload.get("user_id")
     ).first()
 
     if not user:
@@ -40,7 +40,7 @@ def get_current_user(
 
 
 def get_current_admin(
-    current_user: User = Depends(get_current_user)
+    current_user: user_model = Depends(get_current_user)
 ):
     if current_user.role != "admin":
         raise HTTPException(

@@ -76,6 +76,6 @@ def login_user(
     response_model=UserResponse
 )
 def get_logged_in_user(
-    current_user: User = Depends(get_current_user)
+    current_user: user_model = Depends(get_current_user)
 ):
     return current_user

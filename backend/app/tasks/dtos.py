@@ -1,14 +1,25 @@
-from pydantic import BaseModel, Field,Field
-from typing import Annotated,Optional
+from pydantic import BaseModel
+from datetime import datetime
 
-class task_schema(BaseModel):
 
-    id:Annotated[int,Field(description="enter the task id" )]
-    task_name:Annotated[str,Field(description="enter the task name")]
-    description:Annotated[str,Field(description="enter the description of task")]
-    is_completed:Annotated[bool,Field(default=False)]
+class TaskCreate(BaseModel):
+    title: str
+    description: str | None = None
 
-class task_schema_update(BaseModel):
-    task_name:Annotated[Optional[str],Field(description="enter the task name",example="study",default=None)]
-    description:Annotated[Optional[str],Field(description="enter the description of task",default=None)]
-    is_completed:Annotated[Optional[bool],Field(default=None)]
+
+class TaskUpdate(BaseModel):
+    title: str | None = None
+    description: str | None = None
+    completed: bool | None = None
+
+
+class TaskResponse(BaseModel):
+    id: int
+    title: str
+    description: str | None
+    completed: bool
+    owner_id: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

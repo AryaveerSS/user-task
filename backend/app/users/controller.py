@@ -12,8 +12,8 @@ def get_user_by_email(
     email: str,
     db: Session
 ):
-    return db.query(User).filter(
-        User.email == email
+    return db.query(user_model).filter(
+        user_model.email == email
     ).first()
 
 
@@ -32,7 +32,7 @@ def create_user(
             detail="Email already registered"
         )
 
-    new_user = User(
+    new_user = user_model(
         name=user_data.name,
         email=user_data.email,
         hashed_password=hash_password(

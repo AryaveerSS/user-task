@@ -1,23 +1,112 @@
-from fastapi import APIRouter,Depends
-from app.tasks.controller import create_task,get_task,getall_task,update_task
-from sqlalchemy.orm import session 
-from app.tasks.dtos import task_schema,task_schema_update
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import Query
+from fastapi import status
+
+from sqlalchemy.orm import Session
+
 from app.core.database import get_db
 
-task_router=APIRouter(prefix="/tasks")
+from app.tasks.dtos import TaskCreate
+from app.tasks.dtos import TaskUpdate
+from app.tasks.dtos import TaskResponse
 
-@task_router.post("/create")
-def create_task_endpoint(task:task_schema,db=Depends(get_db)):
-    return create_task(task,db)
+from app.tasks.controller import create_task_controller
+from app.tasks.controller import get_tasks_controller
+from app.tasks.controller import get_single_task_controller
+from app.tasks.controller import update_task_controller
+from app.tasks.controller import delete_task_controller
 
-@task_router.get("/view/{id}")
-def get_task_endpoint(id:int,db=Depends(get_db)):
-    return get_task(id,db)
+from app.users.dependencies import get_current_user
 
-@task_router.get("/view")
-def getall_task_endpoint(db:session=Depends(get_db)):
-    return getall_task(db)
+from app.users.models import user_model
 
-@task_router.put("/update_task/{id}")
-def update_task_endpoint(id:int,task:task_schema_update,db:session=Depends(get_db)):
-    return update_task(id,task,db)
+router = APIRouter()
+
+
+@router.post(
+    "/",
+    response_model=TaskResponse,
+    status_code=status.HTTP_201_CREATED
+)
+def create_task(
+    task_data: TaskCreate,
+    db: Session = Depends(get_db),
+    current_user: user_model = Depends(get_current_user)
+):
+    return create_task_controller(
+        task_data,
+        db,
+        current_user
+    )
+
+
+@router.get(
+    "/",
+    response_model=list[TaskResponse]
+)
+def get_tasks(
+    skip: int = 0,
+    limit: int = Query(default=10, le=100),
+    search: str | None = None,
+    completed: bool | None = None,
+    db: Session = Depends(get_db),
+    current_user: user_model = Depends(get_current_user)
+):
+    return get_tasks_controller(
+        db,
+        current_user,
+        skip,
+        limit,
+        search,
+        completed
+    )
+
+
+@router.get(
+    "/{task_id}",
+    response_model=TaskResponse
+)
+def get_single_task(
+    task_id: int,
+    db: Session = Depends(get_db),
+    current_user: user_model = Depends(get_current_user)
+):
+    return get_single_task_controller(
+        task_id,
+        db,
+        current_user
+    )
+
+
+@router.put(
+    "/{task_id}",
+    response_model=TaskResponse
+)
+def update_task(
+    task_id: int,
+    task_data: TaskUpdate,
+    db: Session = Depends(get_db),
+    current_user: user_model = Depends(get_current_user)
+):
+    return update_task_controller(
+        task_id,
+        task_data,
+        db,
+        current_user
+    )
+
+
+@router.delete(
+    "/{task_id}"
+)
+def delete_task(
+    task_id: int,
+    db: Session = Depends(get_db),
+    current_user: user_model = Depends(get_current_user)
+):
+    return delete_task_controller(
+        task_id,
+        db,
+        current_user
+    )

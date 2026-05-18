@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-
-from app.core.database import Base
+from app.tasks.models import Task
+# from app.tasks.controller import router as task_router
+from app.core.database import base
 from app.core.database import engine
 
 from app.users.models import user_model
@@ -10,7 +11,8 @@ from app.tasks.routes import router as task_router
 
 from app.middleware.error_handler import register_exception_handlers
 
-Base.metadata.create_all(bind=engine)
+base.metadata.create_all(bind=engine)
+
 
 app = FastAPI(
     title="Task Management API",

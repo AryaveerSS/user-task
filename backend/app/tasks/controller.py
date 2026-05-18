@@ -1,52 +1,149 @@
-from app.tasks.dtos import task_schema,task_schema_update
-from sqlalchemy.orm import session
-from app.tasks.models import task_model
-from fastapi.responses import JSONResponse
 from fastapi import HTTPException
+from fastapi import status
 
-def create_task(task:task_schema,db:session):
-    new_task=task_model(
+from sqlalchemy.orm import Session
 
-        id=task.id,
-        task_name=task.task_name,
-        description=task.description,
-        is_completed=task.is_completed
+from app.tasks.models import Task
+from app.tasks.dtos import TaskCreate
+from app.tasks.dtos import TaskUpdate
 
+from app.users.models import user_model
+
+
+def create_task_controller(
+    task_data: TaskCreate,
+    db: Session,
+    current_user: user_model
+):
+    task = Task(
+        title=task_data.title,
+        description=task_data.description,
+        owner_id=current_user.id
     )
 
-    db.add(new_task)
-
+    db.add(task)
     db.commit()
+    db.refresh(task)
 
-    db.refresh(new_task)
-
-    return JSONResponse(status_code=200,content="task successfuly created")
-
-def get_task(idd:int,db:session):
-    # task = db.query(task_model).get(idd)
-    task=  db.query(task_model).filter(task_model.id==idd).first()
-    if task is None:
-        raise HTTPException(status_code=404,detail=" task id is not in the database ")
-    
-    return {"status":"task fetched successfuly","data":task}
-
-def getall_task(db:session):
-    task=db.query(task_model).all()
     return task
 
-def update_task(idd:int,task:task_schema_update,db:session):
-    one_task=db.query(task_model).get(idd)
-    if one_task is None:
-        raise HTTPException(status_code=404,detail=" task id is not in the database ")
-    
-    task_dict=task.model_dump(exclude_unset=True)
-    for col,value in task_dict.items():
-        setattr(one_task,col,value)
 
-    db.add(one_task)
+def get_tasks_controller(
+    db: Session,
+    current_user: user_model,
+    skip: int,
+    limit: int,
+    search: str | None,
+    completed: bool | None
+):
+    query = db.query(Task).filter(
+        Task.owner_id == current_user.id
+    )
+
+    if search:
+        query = query.filter(
+            Task.title.ilike(f"%{search}%")
+        )
+
+    if completed is not None:
+        query = query.filter(
+            Task.completed == completed
+        )
+
+    tasks = query.offset(skip).limit(limit).all()
+
+    return tasks
+
+
+def get_single_task_controller(
+    task_id: int,
+    db: Session,
+    current_user: user_model
+):
+    task = db.query(Task).filter(
+        Task.id == task_id
+    ).first()
+
+    if not task:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Task not found"
+        )
+
+    if (
+        task.owner_id != current_user.id
+        and current_user.role != "admin"
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied"
+        )
+
+    return task
+
+
+def update_task_controller(
+    task_id: int,
+    task_data: TaskUpdate,
+    db: Session,
+    current_user: user_model
+):
+    task = db.query(Task).filter(
+        Task.id == task_id
+    ).first()
+
+    if not task:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Task not found"
+        )
+
+    if task.owner_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You can only update your own tasks"
+        )
+
+    update_data = task_data.model_dump(
+        exclude_unset=True
+    )
+
+    for key, value in update_data.items():
+        setattr(task, key, value)
 
     db.commit()
+    db.refresh(task)
 
-    db.refresh(one_task)
+    return task
 
-    return {"status":"task updated successfuly","data":one_task}
+
+def delete_task_controller(
+    task_id: int,
+    db: Session,
+    current_user: user_model
+):
+    task = db.query(Task).filter(
+        Task.id == task_id
+    ).first()
+
+    if not task:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Task not found"
+        )
+
+    if (
+        task.owner_id != current_user.id
+        and current_user.role != "admin"
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied"
+        )
+
+    db.delete(task)
+    db.commit()
+
+    return {
+        "message": "Task deleted successfully"
+    }
