@@ -8,7 +8,7 @@ from app.users.models import user_model
 from fastapi.middleware.cors import CORSMiddleware
 from app.users.routes import router as user_router
 from app.tasks.routes import router as task_router
-
+from app.admin.router import router as admin_router
 from app.middleware.error_handler import register_exception_handlers
 
 base.metadata.create_all(bind=engine)
@@ -35,7 +35,10 @@ app.add_middleware(
     allow_headers=["*"]
 )
 register_exception_handlers(app)
-
+app.include_router(
+    admin_router,
+    prefix="/api/v1"
+)
 app.include_router(
     user_router,
     prefix="/api/v1/users",

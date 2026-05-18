@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from fastapi import status
 
+
 from app.users.models import user_model
 from app.users.dtos import UserRegister
 from app.utils.hashing import hash_password
@@ -58,12 +59,17 @@ def authenticate_user(
     )
 
     if not user:
-        return None
+        raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="User not found"
+    )
 
     if not verify_password(
         password,
         user.hashed_password
     ):
-        return None
-
+        raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Incorrect password"
+    )
     return user

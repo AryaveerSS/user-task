@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import Query
 from fastapi import status
-
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -110,3 +110,22 @@ def delete_task(
         db,
         current_user
     )
+
+
+@router.get("/admin")
+def admin_route(
+    current_user = Depends(
+        get_current_user
+    )
+):
+
+    if current_user.role != "admin":
+
+        raise HTTPException(
+            status_code=403,
+            detail="Admins only"
+        )
+
+    return {
+        "message": "Welcome admin"
+    }

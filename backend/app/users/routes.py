@@ -52,14 +52,6 @@ def login_user(
         db
     )
 
-    if not user:
-        from fastapi import HTTPException
-
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials"
-        )
-
     access_token = create_access_token({
         "user_id": user.id,
         "role": user.role

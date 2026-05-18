@@ -27,4 +27,4 @@ class Task(base):
 
     owner_id = Column(Integer,ForeignKey("users.id"))
 
-    owner = relationship("User",back_populates="tasks")
+    owner = relationship("user_model",back_populates="tasks")
