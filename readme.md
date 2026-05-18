@@ -1,39 +1,36 @@
-# Scalable Task Management API
+# Full Stack Task Management System
 
-A production-style backend application built with FastAPI, PostgreSQL, JWT Authentication, and Role-Based Access Control (RBAC). The project includes a simple React frontend for interacting with the APIs.
+A full-stack task management application built using FastAPI, PostgreSQL, React, and JWT Authentication with Role-Based Access Control (RBAC).
 
-## Features
+---
 
-### Authentication & Authorization
+# Features
+
+## Authentication
 - User Registration
 - User Login
-- Password Hashing using BCrypt
 - JWT Authentication
+- Password Hashing using bcrypt
 - Protected Routes
-- Role-Based Access Control (User/Admin)
+- Persistent Login
 
-### Task Management
+---
+
+## Task Management
 - Create Tasks
-- Get Tasks
+- View Tasks
 - Update Tasks
 - Delete Tasks
-- User-specific task ownership
+- Toggle Task Completion Status
 
-### Backend Features
-- FastAPI REST APIs
-- PostgreSQL Database Integration
-- SQLAlchemy ORM
-- Pydantic Validation
-- API Versioning
-- Modular Scalable Architecture
-- Error Handling
-- Swagger Documentation
+---
 
-### Frontend Features
-- User Registration/Login UI
-- Protected Dashboard
-- CRUD Operations for Tasks
-- API Integration using Axios
+## Admin Features
+- View All Users
+- View All Tasks
+- Delete Any User
+- Delete Any Task
+- Role-Based Access Control (RBAC)
 
 ---
 
@@ -45,47 +42,48 @@ A production-style backend application built with FastAPI, PostgreSQL, JWT Authe
 - SQLAlchemy
 - Pydantic
 - JWT Authentication
-- Passlib (BCrypt)
+- Passlib / bcrypt
+
+---
 
 ## Frontend
-- React.js
+- React
+- Vite
 - Axios
-- Tailwind CSS
+- React Router DOM
 
 ---
 
 # Project Structure
 
 ```bash
-backend/
+project-root/
 │
-├── app/
-│   ├── main.py
-│   │
-│   ├── core/
-│   │   ├── config.py
-│   │   ├── database.py
-│   │
-│   ├── users/
-│   │   ├── model.py
-│   │   ├── schema.py
-│   │   ├── router.py
-│   │   ├── service.py
-│   │   ├── dependencies.py
-│   │
-│   ├── tasks/
-│   │   ├── model.py
-│   │   ├── schema.py
-│   │   ├── router.py
-│   │   ├── service.py
-│   │
-│   ├── utils/
-│   │   ├── hashing.py
-│   │   ├── jwt_handler.py
-│   │
-│   └── middleware/
-│       └── error_handler.py
+├── backend/
 │
-├── requirements.txt
-├── .env
+│   ├── app/
+│   │
+│   │   ├── admin/
+│   │   ├── core/
+│   │   ├── tasks/
+│   │   ├── users/
+│   │   ├── utils/
+│   │   └── main.py
+│   │
+│   ├── requirements.txt
+│   └── .env
+│
+├── frontend/
+│
+│   ├── src/
+│   │
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── pages/
+│   │   ├── routes/
+│   │   └── services/
+│   │
+│   ├── package.json
+│   └── vite.config.js
+│
 └── README.md
