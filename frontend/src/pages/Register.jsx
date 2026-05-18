@@ -80,26 +80,23 @@ function Register() {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "400px",
-        margin: "100px auto",
-      }}
-    >
-      <h2>Register</h2>
+
+  <div className="auth-container">
+
+    <div className="auth-card">
+
+      <h1>Create Account</h1>
 
       <form onSubmit={handleSubmit}>
 
         <input
           type="text"
           name="name"
-          placeholder="Name"
+          placeholder="Full Name"
           value={formData.name}
           onChange={handleChange}
           required
         />
-
-        <br /><br />
 
         <input
           type="email"
@@ -110,8 +107,6 @@ function Register() {
           required
         />
 
-        <br /><br />
-
         <input
           type="password"
           name="password"
@@ -121,7 +116,13 @@ function Register() {
           required
         />
 
-        <br /><br />
+        {
+          error && (
+            <p className="error-message">
+              {error}
+            </p>
+          )
+        }
 
         <button type="submit">
           Register
@@ -129,25 +130,19 @@ function Register() {
 
       </form>
 
-      <br />
+      <div className="auth-link">
 
-      {
-  error && (
-    <p
-      style={{
-        color: "red",
-        marginTop: "10px",
-      }}
-    >
-      {error}
-    </p>
-  )
-}
-      <Link to="/login">
-        Already have an account?
-      </Link>
+        <Link to="/login">
+          Already have an account?
+        </Link>
+
+      </div>
+
     </div>
-  );
+
+  </div>
+
+);
 }
 
 export default Register;

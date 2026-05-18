@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 
 function Dashboard() {
-
+  const role = localStorage.getItem(
+  "role"
+);
   const [tasks, setTasks] = useState([]);
 
   const [title, setTitle] = useState("");
@@ -283,9 +285,33 @@ function Dashboard() {
 
         <h1>Dashboard</h1>
 
-        <button onClick={handleLogout}>
-          Logout
-        </button>
+        <div
+  style={{
+    display: "flex",
+    gap: "10px",
+  }}
+>
+
+  {
+    role === "admin" && (
+
+      <button
+        onClick={() =>
+          window.location.href =
+            "/admin"
+        }
+      >
+        Admin Panel
+      </button>
+
+    )
+  }
+
+  <button onClick={handleLogout}>
+    Logout
+  </button>
+
+</div>
 
       </div>
 

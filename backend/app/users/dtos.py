@@ -71,6 +71,14 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
+class TokenUser(BaseModel):
+    id: int
+    name: str
+    email: str
+    role: str
+
+
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str
+    user: TokenUser
