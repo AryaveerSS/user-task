@@ -1,6 +1,6 @@
-from app.task.dtos import task_schema,task_schema_update
+from app.tasks.dtos import task_schema,task_schema_update
 from sqlalchemy.orm import session
-from app.task.models import task_model
+from app.tasks.models import task_model
 from fastapi.responses import JSONResponse
 from fastapi import HTTPException
 

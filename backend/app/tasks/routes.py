@@ -1,7 +1,7 @@
 from fastapi import APIRouter,Depends
-from app.task.controller import create_task,get_task,getall_task,update_task
+from app.tasks.controller import create_task,get_task,getall_task,update_task
 from sqlalchemy.orm import session 
-from app.task.dtos import task_schema,task_schema_update
+from app.tasks.dtos import task_schema,task_schema_update
 from app.core.database import get_db
 
 task_router=APIRouter(prefix="/tasks")
