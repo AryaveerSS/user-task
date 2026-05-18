@@ -1,10 +1,17 @@
 from fastapi import FastAPI
-from src.utils.db import base,engine
-from src.task.models import task_model
-from src.task.routes import task_router
-from src.user.routes import user_router
+from app.core.database import base,engine
+from app.task.models import task_model
+from app.task.routes import task_router
+from app.user.routes import user_router
 base.metadata.create_all(engine)
 
 app=FastAPI(title=" task management app ")
+
 app.include_router(task_router)
 app.include_router(user_router)
+
+@app.get("/")
+async def root():
+    return {
+        "message": "Task Management API Running"
+    }

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from src.user.models import user_model
-from src.user.dtos import user_schema
+from app.user.models import user_model
+from app.user.dtos import user_schema
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 

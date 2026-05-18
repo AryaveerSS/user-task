@@ -1,5 +1,5 @@
 from sqlalchemy import Column,Integer,String,Boolean
-from src.utils.db import base
+from app.core.database import base
 
 class task_model(base):
     __tablename__="tasks"

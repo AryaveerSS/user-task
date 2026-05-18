@@ -1,9 +1,9 @@
 from fastapi import APIRouter,Depends
 from sqlalchemy.orm import Session
-from src.user.models import user_model
-from src.user.dtos import user_schema
-from src.utils.db import get_db
-from src.user.controller import register
+from app.user.models import user_model
+from app.user.dtos import user_schema
+from app.core.database import get_db
+from app.user.controller import register
 
 user_router=APIRouter(prefix="/user")
 
