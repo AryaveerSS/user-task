@@ -1,15 +1,33 @@
 from pydantic import BaseModel
+from pydantic import Field
+
 from datetime import datetime
 
 
 class TaskCreate(BaseModel):
-    title: str
-    description: str | None = None
+    title: str = Field(
+        min_length=3,
+        max_length=100
+    )
+
+    description: str | None = Field(
+        default=None,
+        max_length=500
+    )
 
 
 class TaskUpdate(BaseModel):
-    title: str | None = None
-    description: str | None = None
+    title: str | None = Field(
+        default=None,
+        min_length=3,
+        max_length=100
+    )
+
+    description: str | None = Field(
+        default=None,
+        max_length=500
+    )
+
     completed: bool | None = None
 
 

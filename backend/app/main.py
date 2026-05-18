@@ -5,7 +5,7 @@ from app.core.database import base
 from app.core.database import engine
 
 from app.users.models import user_model
-
+from fastapi.middleware.cors import CORSMiddleware
 from app.users.routes import router as user_router
 from app.tasks.routes import router as task_router
 
@@ -16,9 +16,24 @@ base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Task Management API",
+    description="""
+    Scalable FastAPI backend with:
+
+    - JWT Authentication
+    - Role-Based Access Control
+    - Protected CRUD APIs
+    - PostgreSQL Integration
+    - Modular Architecture
+    """,
     version="1.0.0"
 )
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 register_exception_handlers(app)
 
 app.include_router(
