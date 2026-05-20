@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from fastapi import status
 
 from sqlalchemy.orm import Session
-
+from app.utils.logger import logger 
 from app.tasks.models import Task
 from app.tasks.dtos import TaskCreate
 from app.tasks.dtos import TaskUpdate
@@ -23,6 +23,10 @@ def create_task_controller(
 
     db.add(task)
     db.commit()
+    logger.info(
+    f"Task created: "
+    f"{task.title}"
+    )
     db.refresh(task)
 
     return task
@@ -139,8 +143,11 @@ def delete_task_controller(
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied"
+        )   
+    logger.info(
+    f"Task deleted: "
+    f"{task.title}"
         )
-
     db.delete(task)
     db.commit()
 

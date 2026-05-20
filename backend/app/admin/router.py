@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
-
+from app.utils.logger import logger
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -66,7 +66,10 @@ def delete_user(
             status_code=404,
             detail="User not found"
         )
-
+    logger.warning(
+    f"Admin deleted "
+    f"user {user.email}"
+    )
     db.delete(user)
 
     db.commit()

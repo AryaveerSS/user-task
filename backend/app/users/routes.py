@@ -5,7 +5,7 @@ from fastapi import status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-
+from app.utils.logger import logger
 from app.users.dtos import UserRegister
 from app.users.dtos import UserLogin
 from app.users.dtos import UserResponse
@@ -32,10 +32,16 @@ def register_user(
     user_data: UserRegister,
     db: Session = Depends(get_db)
 ):
-    return create_user(
-        user_data,
-        db
+    new_user = create_user(
+    user_data,
+    db
     )
+
+    logger.info(
+    f"{new_user.email} registered"
+    )
+
+    return new_user
 
 
 @router.post(
@@ -51,7 +57,9 @@ def login_user(
         user_data.password,
         db
     )
-
+    logger.info(
+    f"{user.email} logged in"
+)
     access_token = create_access_token({
         "user_id": user.id,
         "role": user.role
