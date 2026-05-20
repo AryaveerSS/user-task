@@ -9,15 +9,14 @@ pydantic-settings
 email-validator
 
 python-jose[cryptography]
-passlib[bcrypt]
+bcrypt==4.0.1
+passlib[bcrypt]==1.7.4
 
 python-multipart
 
 python-dotenv
 
 alembic
-
-bcrypt
 
 httpx
 

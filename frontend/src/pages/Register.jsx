@@ -37,11 +37,12 @@ function Register() {
     }
     catch (err) {
 
-  console.log(err.response.data);
+  console.log(
+  err.response?.data
+  )
 
   if (
-    err.response &&
-    err.response.data
+  err.response?.data
   ) {
 
     if (

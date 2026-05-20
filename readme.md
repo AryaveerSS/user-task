@@ -1,263 +1,372 @@
-# README.md
-
-````md id="r4n8x1"
 # Full Stack Task Management System
 
-A full-stack task management application built using FastAPI, PostgreSQL, React, and JWT Authentication with Role-Based Access Control (RBAC).
+A production-style full-stack task management application built using FastAPI, React, PostgreSQL, JWT Authentication, Docker, and Role-Based Access Control (RBAC).
+
+The system supports secure authentication, task management, admin controls, Docker deployment, and logging.
 
 ---
 
-# Features
+## Features
 
-## Authentication
+### Authentication & Security
+
 - User Registration
 - User Login
 - JWT Authentication
-- Password Hashing using bcrypt
-- Protected Routes
-- Persistent Login
+- Password Hashing (bcrypt)
+- Protected API Routes
+- Protected Frontend Routes
+- Persistent Login Sessions
+- Role-Based Access Control (RBAC)
+- Admin Authorization
+- Input Validation
+- Secure Password Storage
 
 ---
 
-## Task Management
+### Task Management
+
+Users can:
+
 - Create Tasks
 - View Tasks
-- Update Tasks
+- Edit Tasks
 - Delete Tasks
-- Toggle Task Completion Status
+- Update Task Status
+- Toggle Completion State
 
 ---
 
-## Admin Features
+### Admin Dashboard
+
+Admin users can:
+
 - View All Users
 - View All Tasks
 - Delete Any User
 - Delete Any Task
-- Role-Based Access Control (RBAC)
+- Manage Platform Data
 
 ---
 
-# Tech Stack
+### Error Handling
 
-## Backend
+Frontend displays:
+
+- Invalid Password
+- Short Password Validation
+- Duplicate Email Detection
+- Login Failure Messages
+- Registration Errors
+- API Validation Errors
+
+Backend handles:
+
+- HTTP Exceptions
+- Validation Errors
+- Authentication Errors
+- Authorization Errors
+
+---
+
+### Logging System
+
+Application logs:
+
+- User Registration
+- User Login
+- Failed Login Attempts
+- Task Creation
+- Task Updates
+- Task Deletion
+- Admin Actions
+
+Example:
+
+```
+2026-05-20 INFO user@gmail.com logged in
+
+2026-05-20 INFO Task created: Build Backend API
+
+2026-05-20 WARNING Admin deleted user
+```
+
+---
+
+## Docker Support
+
+Application is fully containerized.
+
+Docker containers:
+
+- Frontend Container
+- Backend Container
+- PostgreSQL Container
+
+Start project:
+
+```bash
+docker compose up --build
+```
+
+Stop:
+
+```bash
+docker compose down
+```
+
+---
+
+## Tech Stack
+
+### Backend
+
 - FastAPI
+- SQLAlchemy ORM
 - PostgreSQL
-- SQLAlchemy
 - Pydantic
 - JWT Authentication
-- Passlib / bcrypt
+- Passlib
+- bcrypt
+- Python Logging
 
----
+### Frontend
 
-## Frontend
 - React
 - Vite
 - Axios
 - React Router DOM
 
+### DevOps
+
+- Docker
+- Docker Compose
+
 ---
 
-# Project Structure
+## Project Structure
 
-```bash
+```
+
 project-root/
-│
+
 ├── backend/
 │
-│   ├── app/
-│   │
-│   │   ├── admin/
-│   │   ├── core/
-│   │   ├── tasks/
-│   │   ├── users/
-│   │   ├── utils/
-│   │   └── main.py
-│   │
-│   ├── requirements.txt
-│   └── .env
+├── app/
+│ ├── admin/
+│ ├── core/
+│ ├── tasks/
+│ ├── users/
+│ ├── utils/
+│ └── main.py
 │
+├── requirements.txt
+├── Dockerfile
+└── .env
+
 ├── frontend/
 │
-│   ├── src/
-│   │
-│   │   ├── components/
-│   │   ├── context/
-│   │   ├── pages/
-│   │   ├── routes/
-│   │   └── services/
-│   │
-│   ├── package.json
-│   └── vite.config.js
+├── src/
+│ ├── context/
+│ ├── pages/
+│ ├── routes/
+│ ├── services/
+│ └── components/
 │
+├── package.json
+├── Dockerfile
+└── vite.config.js
+
+├── docker-compose.yml
+
 └── README.md
-````
 
----
-
-# Backend Setup
-
-## 1. Clone Repository
-
-```bash
-git clone YOUR_GITHUB_REPO_LINK
 ```
 
 ---
 
-## 2. Create Virtual Environment
+## Installation (Local)
+
+### Backend
+
+Create virtual environment:
 
 ```bash
 python -m venv venv
 ```
 
----
+Activate:
 
-## 3. Activate Virtual Environment
-
-### Windows
+Windows:
 
 ```bash
 venv\Scripts\activate
 ```
 
-### Mac/Linux
-
-```bash
-source venv/bin/activate
-```
-
----
-
-## 4. Install Dependencies
+Install packages:
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-## 5. Configure Environment Variables
-
 Create `.env`
 
-```env
-DATABASE_URL=postgresql://postgres:password@localhost/task_db
+```
+
+DATABASE_URL=postgresql://username:password@localhost/database
 
 SECRET_KEY=your_secret_key
 
 ALGORITHM=HS256
 
 ACCESS_TOKEN_EXPIRE_MINUTES=30
+
 ```
 
----
-
-## 6. Run Backend
+Run backend:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-Backend runs on:
+Backend:
 
-```text
-http://127.0.0.1:8000
+```
+
+http://localhost:8000
+
 ```
 
 ---
 
-# Frontend Setup
+### Frontend
 
-## 1. Move To Frontend Folder
+Move frontend:
 
 ```bash
 cd frontend
 ```
 
----
-
-## 2. Install Dependencies
+Install:
 
 ```bash
 npm install
 ```
 
----
-
-## 3. Start Frontend
+Run:
 
 ```bash
 npm run dev
 ```
 
-Frontend runs on:
+Frontend:
 
-```text
+```
+
 http://localhost:5173
+
 ```
 
 ---
 
-# API Endpoints
+## Docker Setup
 
-## Authentication
+Run:
 
-| Method | Endpoint               |
-| ------ | ---------------------- |
-| POST   | /api/v1/users/register |
-| POST   | /api/v1/users/login    |
+```bash
+docker compose up --build
+```
+
+Frontend:
+
+```
+
+http://localhost:5173
+
+```
+
+Backend:
+
+```
+
+http://localhost:8000/docs
+
+```
 
 ---
 
-## Tasks
+## API Endpoints
 
-| Method | Endpoint           |
-| ------ | ------------------ |
-| GET    | /api/v1/tasks      |
-| POST   | /api/v1/tasks      |
-| PUT    | /api/v1/tasks/{id} |
+### Authentication
+
+| Method | Endpoint |
+|----------|--------------------------|
+| POST | /api/v1/users/register |
+| POST | /api/v1/users/login |
+| GET | /api/v1/users/me |
+
+---
+
+### Tasks
+
+| Method | Endpoint |
+|----------|---------------------|
+| GET | /api/v1/tasks |
+| POST | /api/v1/tasks |
+| PUT | /api/v1/tasks/{id} |
 | DELETE | /api/v1/tasks/{id} |
 
 ---
 
-## Admin
+### Admin
 
-| Method | Endpoint                 |
-| ------ | ------------------------ |
-| GET    | /api/v1/admin/users      |
-| GET    | /api/v1/admin/tasks      |
+| Method | Endpoint |
+|----------|---------------------------|
+| GET | /api/v1/admin/users |
+| GET | /api/v1/admin/tasks |
 | DELETE | /api/v1/admin/users/{id} |
 | DELETE | /api/v1/admin/tasks/{id} |
 
 ---
 
-# Security Features
+## Security Features
 
-* JWT Authentication
-* Password Hashing
-* Protected Routes
-* Role-Based Authorization
-* Admin Route Protection
-* Input Validation
-* Error Handling
-
----
-
-# Future Improvements
-
-* Task Search & Filtering
-* Pagination
-* Docker Support
-* Task Deadlines
-* Email Verification
-* Deployment
-* Unit Testing
+- JWT Authentication
+- Password Hashing
+- Protected Routes
+- Role-Based Access Control
+- Admin Authorization
+- Validation Layer
+- Secure Token Management
 
 ---
 
-# Author
+## Future Improvements
+
+- Task Filtering
+- Pagination
+- Redis Caching
+- Unit Testing
+- CI/CD Pipeline
+- Email Verification
+- Profile Management
+- Notifications
+
+---
+
+## Screenshots
+
+Add:
+
+- Login Page
+- Register Page
+- Dashboard
+- Admin Dashboard
+
+---
+
+## Author
 
 Aryaveer Singh
 
-```
-```
+Backend Developer | FastAPI | PostgreSQL | React
