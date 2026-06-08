@@ -185,6 +185,59 @@ project-root/
 
 ---
 
+## Default Admin Account
+
+The project includes a seed script to create a default admin user without touching the database manually.
+
+After starting the backend, run:
+
+```bash
+python seed.py
+```
+
+Default credentials:
+
+```
+Email    : admin@example.com
+Password : admin123
+```
+
+Change the password after first login.
+
+---
+
+## API Documentation
+
+FastAPI auto-generates interactive Swagger docs.
+
+Once the backend is running, open:
+
+```
+http://localhost:8000/docs
+```
+
+You can test every endpoint directly from the browser — register a user, log in, get a token, and make authenticated requests all from the Swagger UI.
+
+---
+
+## Scalability Notes
+
+The architecture is designed to scale horizontally and evolve into a microservices system without major rewrites:
+
+**Modular structure** — Each domain (users, tasks, admin) is a self-contained module with its own models, DTOs, controllers, and routes. Adding new modules (e.g., notifications, billing) requires no changes to existing code.
+
+**Database layer** — SQLAlchemy ORM with connection pooling (`pool_size=10`, `max_overflow=20`). Can be swapped to async sessions (`AsyncSession`) for high-throughput workloads. Alembic is included for schema migrations without downtime.
+
+**Caching** — Redis can be introduced as a caching layer for frequently read endpoints (e.g., task lists) using `fastapi-cache2`. JWT blacklisting for logout can also be handled via Redis.
+
+**Load balancing** — The backend is stateless (JWT-based auth, no server-side sessions), so multiple backend instances can run behind an Nginx reverse proxy or a cloud load balancer (AWS ALB, GCP Load Balancer) without sticky sessions.
+
+**Containerisation** — Docker Compose covers local dev. For production, the same containers can be deployed to Kubernetes (EKS, GKE) or AWS ECS with auto-scaling policies on CPU/memory.
+
+**Microservices path** — The modular structure maps cleanly to microservices: `users-service`, `tasks-service`, `admin-service` can be split into independent FastAPI apps behind an API Gateway (Kong, AWS API Gateway) when traffic demands it.
+
+---
+
 ## Installation (Local)
 
 ### Backend
@@ -229,12 +282,22 @@ Run backend:
 uvicorn app.main:app --reload
 ```
 
+Seed the default admin user (run once):
+
+```bash
+python seed.py
+```
+
 Backend:
 
 ```
-
 http://localhost:8000
+```
 
+Swagger docs:
+
+```
+http://localhost:8000/docs
 ```
 
 ---
@@ -277,20 +340,22 @@ Run:
 docker compose up --build
 ```
 
+Seed the admin (in a separate terminal, while containers are running):
+
+```bash
+docker compose exec backend python seed.py
+```
+
 Frontend:
 
 ```
-
 http://localhost:5173
-
 ```
 
 Backend:
 
 ```
-
 http://localhost:8000/docs
-
 ```
 
 ---
